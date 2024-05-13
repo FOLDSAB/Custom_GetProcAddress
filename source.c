@@ -4,10 +4,10 @@
 #include <Windows.h>
 
 
-FARPROC cusgetprocaddress(HMODULE hmodule,LPSTR apiname);
+FARPROC cusgetprocaddress(HMODULE hmodule,LPSTR apiname,int *found);
 int main(int argc,char*argv[]) {
 
-
+	int found = NULL;
 	if (argc != 3) {
 		printf("please enter a valid command\n");
 		goto  END;
@@ -23,12 +23,18 @@ int main(int argc,char*argv[]) {
 
 
 	if (hmodule == NULL) {
+
+
 		printf("The getprocess failed with error no %d\n",GetLastError());
 	}
 
 
 	else {
-		cusgetprocaddress(hmodule,apiname);
+		cusgetprocaddress(hmodule,apiname,&found);
+
+		if (1 != found) {
+			printf("Cannot find the API specified\n");
+		}
 		FreeLibrary(hmodule);
 
 	}
@@ -42,9 +48,9 @@ END:
 }
 
 
-FARPROC cusgetprocaddress(HMODULE hmodule,LPSTR apiname) {
+FARPROC cusgetprocaddress(HMODULE hmodule,LPSTR apiname,int *found) {
 
-
+	
 	PBYTE dllbase = (PBYTE)hmodule;
 
 
@@ -83,9 +89,11 @@ FARPROC cusgetprocaddress(HMODULE hmodule,LPSTR apiname) {
 
 		if (strcmp(apiname, name) == 0) {
 			printf("[%d] %s at ORDIOANL %d \t Address: %p\n", i, name, ordionals, functionaddress);
+			*found = 1;
 			break;
 		}
 		else {
+			
 			continue;
 		}
 
