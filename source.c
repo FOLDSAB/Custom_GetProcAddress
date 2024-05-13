@@ -88,7 +88,7 @@ FARPROC cusgetprocaddress(HMODULE hmodule,LPSTR apiname,int *found) {
 		
 
 		if (strcmp(apiname, name) == 0) {
-			printf("[%d] %s at ORDIOANL %d \t Address: %p\n", i, name, ordionals, functionaddress);
+			printf("[+] %s at \t Address: %p\n",  name, functionaddress);
 			*found = 1;
 			break;
 		}
